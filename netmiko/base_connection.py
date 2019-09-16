@@ -23,6 +23,7 @@ from netmiko.netmiko_globals import MAX_BUFFER, BACKSPACE_CHAR
 from netmiko.ssh_exception import (
     NetmikoTimeoutException,
     NetmikoAuthenticationException,
+	PatternNotFoundException,
 )
 from netmiko.utilities import (
     write_bytes,
@@ -1076,6 +1077,14 @@ class BaseConnection(object):
 
         # Initial attempt to get prompt
         prompt = self.read_channel()
+        vxr_pattern = "last login"
+        if vxr_pattern in prompt.lower():
+            time.sleep((delay_factor * 0.1)+3)
+            prompt = self.read_channel()
+        autocommand_pattern = "executing autocommand"
+        if autocommand_pattern in prompt.lower():
+            time.sleep((delay_factor * 0.1)+5)
+            prompt=self.read_channel()
         if self.ansi_escape_codes:
             prompt = self.strip_ansi_escape_codes(prompt)
 
@@ -1083,6 +1092,7 @@ class BaseConnection(object):
         count = 0
         prompt = prompt.strip()
         while count <= 10 and not prompt:
+            log.debug("count = {}".format(count))
             prompt = self.read_channel().strip()
             if prompt:
                 if self.ansi_escape_codes:
