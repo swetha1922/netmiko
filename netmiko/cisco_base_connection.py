@@ -263,9 +263,9 @@ class CiscoBaseConnection(BaseConnection):
                 if re.search(rebooted_bmc_prompt_pattern, output) or re.search(bmc_prompt_pattern, output) or re.search(x86_prompt_pattern, output):
                     is_spitfire = True
                 # Check if proper data received
-                if re.search((pri_prompt_terminator, output, flags=re.M) or re.search(
+                if re.search(pri_prompt_terminator, output, flags=re.M) or re.search(
                     alt_prompt_terminator, output, flags=re.M
-                )) and is_spitfire == False:
+                ) and is_spitfire == False:
                     return return_msg
 
                 self.write_channel(self.TELNET_RETURN)

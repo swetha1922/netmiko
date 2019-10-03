@@ -221,7 +221,7 @@ class CiscoXr(CiscoBaseConnection):
                 output += self.send_command_timing(
                     "no", strip_prompt=False, strip_command=False
                 )
-			if skip_check:
+            if skip_check:
                 return output
 					
             if self.check_config_mode():
